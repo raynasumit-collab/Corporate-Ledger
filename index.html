@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Corporate Ledger Manager</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root{
+    --ink:#16253B;
+    --ink-2:#223a57;
+    --paper:#FBF8F1;
+    --paper-line:#e7e0cf;
+    --brass:#B8863B;
+    --brass-dark:#8f6829;
+    --slate:#55606E;
+    --slate-light:#8993a0;
+    --forest:#2F6B4F;
+    --forest-bg:#e4efe8;
+    --rust:#A83C2E;
+    --rust-bg:#f7e6e3;
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:var(--font-body);
+    background:#e9e4d6;
+    color:var(--ink);
+    min-height:100vh;
+  }
+  .app{
+    display:flex;
+    max-width:1180px;
+    margin:0 auto;
+    min-height:100vh;
+    background:var(--paper);
+    box-shadow:0 0 0 1px rgba(0,0,0,0.04);
+  }
+  .rail{
+    width:200px;
+    flex-shrink:0;
+    background:var(--ink);
+    padding:28px 0 20px;
+    display:flex;
+    flex-direction:column;
+  }
+  .rail-brand{
+    padding:0 22px 24px;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+    margin-bottom:10px;
+  }
+  .rail-brand .name{
+    font-family:var(--font-display);
+    font-size:20px;
+    font-weight:600;
+    color:#f4efe0;
+    line-height:1.2;
+  }
+  .rail-brand .sub{
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-top:6px;
+  }
+  .tab{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:13px 22px;
+    color:#b9c2cf;
+    font-size:14px;
+    cursor:pointer;
+    border-left:3px solid transparent;
+    background:transparent;
+    position:relative;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .tab .num{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--slate-light);
+    width:16px;
+  }
+  .tab:hover{ background:rgba(255,255,255,0.05); color:#f4efe0; }
+  .tab.active{
+    background:var(--paper);
+    color:var(--ink);
+    border-left-color:var(--brass);
+    border-radius:10px 0 0 10px;
+    margin-right:-1px;
+    font-weight:500;
+  }
+  .tab.active .num{ color:var(--brass-dark); }
+  .main{
+    flex:1;
+    padding:32px 40px 48px;
+    min-width:0;
+  }
+  .page-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:14px;
+    margin-bottom:22px;
+  }
+  .page-head h1{
+    font-family:var(--font-display);
+    font-size:26px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .page-head p{
+    margin:4px 0 0;
+    font-size:13px;
+    color:var(--slate);
+  }
+  .save-state{
+    font-size:11px;
+    color:var(--slate-light);
+    font-family:var(--font-mono);
+    text-align:right;
+  }
+  .panel{ display:none; }
+  .panel.active{ display:block; animation: fadein 0.25s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+  .toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
+  }
+  .toolbar .count{
+    font-size:13px;
+    color:var(--slate);
+  }
+  button.add-btn{
+    font-family:var(--font-body);
+    font-size:13px;
+    font-weight:500;
+    color:var(--paper);
+    background:var(--ink);
+    border:none;
+    padding:9px 16px;
+    border-radius:6px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  button.add-btn:hover{ background:var(--ink-2); }
+  button.add-btn .plus{
+    font-family:var(--font-mono);
+    font-size:15px;
+    color:var(--brass);
+  }
+
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  thead th{
+    text-align:left;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--slate);
+    font-weight:600;
+    padding:8px 10px;
+    border-bottom:1px solid var(--ink);
+  }
+  tbody td{
+    padding:10px;
+    border-bottom:1px solid var(--paper-line);
+    color:var(--ink);
+    vertical-align:middle;
+  }
+  tbody tr:hover td{ background:#f5f1e6; }
+  td.num, th.num{ font-family:var(--font-mono); text-align:right; }
+  .muted{ color:var(--slate-light); font-style:italic; }
+  .empty-row td{ text-align:center; padding:26px; color:var(--slate-light); font-style:italic; border-bottom:none; }
+
+  .del-btn{
+    background:none;
+    border:none;
+    color:var(--slate-light);
+    cursor:pointer;
+    font-size:15px;
+    line-height:1;
+    padding:2px 6px;
+    border-radius:4px;
+  }
+  .del-btn:hover{ color:var(--rust); background:var(--rust-bg); }
+
+  .drawer{
+    display:none;
+    background:#f5f1e6;
+    border:1px solid var(--paper-line);
+    border-radius:10px;
+    padding:18px 20px;
+    margin-bottom:18px;
+  }
+  .drawer.open{ display:block; }
+  .drawer h3{
+    font-family:var(--font-display);
+    font-size:15px;
+    font-weight:600;
+    margin:0 0 14px;
+    color:var(--ink);
+  }
+  .grid-form{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+    gap:12px 14px;
+  }
+  .field{ display:flex; flex-direction:column; gap:5px; }
+  .field label{ font-size:11px; text-transform:uppercase; letter-spacing:0.03em; color:var(--slate); font-weight:600; }
+  .field input, .field select{
+    font-family:var(--font-body);
+    font-size:13px;
+    padding:8px 9px;
+    border:1px solid #d5cdb4;
+    border-radius:6px;
+    background:#fff;
+    color:var(--ink);
+  }
+  .field input:focus, .field select:focus{ outline:2px solid var(--brass); outline-offset:1px; border-color:var(--brass); }
+  .field.wide{ grid-column: span 2; }
+  .drawer-actions{
+    display:flex;
+    gap:10px;
+    margin-top:16px;
+  }
+  .btn-primary{
+    background:var(--brass); color:#2b1c07; border:none; font-weight:600;
+    padding:9px 18px; border-radius:6px; font-size:13px; cursor:pointer; font-family:var(--font-body);
+  }
+  .btn-primary:hover{ background:var(--brass-dark); color:#fff; }
+  .btn-ghost{
+    background:none; border:1px solid #cfc6ab; color:var(--slate);
+    padding:9px 18px; border-radius:6px; font-size:13px; cursor:pointer; font-family:var(--font-body);
+  }
+  .hint{ font-size:11px; color:var(--slate-light); margin-top:4px; }
+  .warn-cell{ color:var(--rust); font-size:11px; font-style:italic; }
+
+  .stamp{
+    display:inline-block;
+    font-family:var(--font-mono);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:5px 12px;
+    border:2px double currentColor;
+    border-radius:20px;
+    transform:rotate(-6deg);
+  }
+  .stamp.settled{ color:var(--forest); background:var(--forest-bg); }
+  .stamp.outstanding{ color:var(--rust); background:var(--rust-bg); }
+
+  .summary-cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
+    gap:12px;
+    margin-bottom:22px;
+  }
+  .scard{
+    background:#f5f1e6;
+    border-radius:8px;
+    padding:14px 16px;
+    border:1px solid var(--paper-line);
+  }
+  .scard .label{ font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--slate); }
+  .scard .value{ font-family:var(--font-mono); font-size:22px; font-weight:500; margin-top:4px; color:var(--ink); }
+
+  .reset-link{
+    font-size:11px; color:var(--slate-light); text-decoration:underline; cursor:pointer; background:none; border:none; font-family:var(--font-body); padding:0;
+  }
+  .rate-section{ margin-bottom:10px; }
+  .rate-section h2{
+    font-family:var(--font-display); font-size:17px; font-weight:600; margin:0 0 4px; color:var(--ink);
+  }
+  .rate-tools{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .search-input{
+    font-family:var(--font-body); font-size:13px; padding:8px 10px; border:1px solid #d5cdb4; border-radius:6px; background:#fff; color:var(--ink); min-width:180px;
+  }
+  .search-input:focus{ outline:2px solid var(--brass); outline-offset:1px; border-color:var(--brass); }
+  select.corp-pick{
+    font-family:var(--font-body); font-size:13px; padding:8px 10px; border:1px solid #d5cdb4; border-radius:6px; background:#fff; color:var(--ink);
+  }
+  button.import-btn{
+    font-family:var(--font-body); font-size:13px; font-weight:500; color:var(--ink); background:#fff;
+    border:1px solid var(--brass); padding:8px 15px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+  }
+  button.import-btn:hover{ background:var(--forest-bg); }
+  .rate-table-wrap{ max-height:400px; overflow-y:auto; border:1px solid var(--paper-line); border-radius:8px; }
+  .rate-table-wrap table{ margin:0; }
+  .rate-table-wrap thead th{ position:sticky; top:0; background:var(--paper); z-index:1; }
+  input.cell-num{
+    width:88px; font-family:var(--font-mono); font-size:12px; padding:5px 6px; border:1px solid #d5cdb4; border-radius:5px; text-align:right; background:#fff; color:var(--ink);
+  }
+  input.cell-num:focus{ outline:2px solid var(--brass); outline-offset:1px; border-color:var(--brass); }
+  input.cell-num.overridden{ border-color:var(--brass); background:#fdf6e8; font-weight:600; }
+  .reset-cell{ font-size:10px; color:var(--slate-light); text-decoration:underline; cursor:pointer; background:none; border:none; font-family:var(--font-body); margin-left:6px; white-space:nowrap; }
+  .reset-cell:hover{ color:var(--brass-dark); }
+  .cost-readonly{ color:var(--slate); }
+  .margin-tag{ font-family:var(--font-mono); font-size:11px; padding:2px 7px; border-radius:10px; }
+  .margin-pos{ color:var(--forest); background:var(--forest-bg); }
+  .margin-neg{ color:var(--rust); background:var(--rust-bg); }
+  @media (max-width:820px){
+    .app{ flex-direction:column; }
+    .rail{ width:100%; flex-direction:row; overflow-x:auto; padding:14px 0; }
+    .rail-brand{ display:none; }
+    .tab.active{ border-radius:8px; border-left:none; border-bottom:3px solid var(--brass); margin-right:0; }
+    .main{ padding:22px 18px 40px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="rail">
+    <div class="rail-brand">
+      <div class="name">Corporate Ledger Manager</div>
+      <div class="sub">Manage Corporates, Rates &amp; Bookings</div>
+    </div>
+    <div class="tab active" data-tab="corporates"><span class="num">01</span>Corporate master</div>
+    <div class="tab" data-tab="bookings"><span class="num">02</span>Booking details</div>
+    <div class="tab" data-tab="payments"><span class="num">03</span>Payments received</div>
+    <div class="tab" data-tab="summary"><span class="num">04</span>Ledger summary</div>
+  </div>
+
+  <div class="main">
+    <div class="page-head">
+      <div>
+        <h1 id="page-title">Corporate master</h1>
+        <p id="page-sub">Every corporate client, on record.</p>
+      </div>
+      <div class="save-state" id="save-state">loading…</div>
+    </div>
+
+    <div class="panel active" id="panel-corporates">
+      <div class="toolbar">
+        <span class="count" id="corp-count">0 corporates</span>
+        <button class="add-btn" onclick="toggleDrawer('corp')"><span class="plus">+</span>Add corporate</button>
+      </div>
+      <div class="drawer" id="drawer-corp">
+        <h3>New corporate</h3>
+        <div class="grid-form">
+          <div class="field"><label>Corporate name</label><input id="c-name" placeholder="Skyline Travel & Tourism LLC"></div>
+          <div class="field"><label>Contact person</label><input id="c-contact" placeholder="Ahmed Khan"></div>
+          <div class="field"><label>Phone</label><input id="c-phone" placeholder="+971 50 123 4567"></div>
+          <div class="field"><label>Email</label><input id="c-email" placeholder="name@company.ae"></div>
+          <div class="field wide"><label>Address</label><input id="c-address" placeholder="Office 12, Deira, Dubai"></div>
+          <div class="field"><label>Trade license / TRN</label><input id="c-trn" placeholder="TRN 100234567"></div>
+          <div class="field"><label>Credit terms (days)</label><input id="c-terms" type="number" placeholder="30"></div>
+          <div class="field wide"><label>Notes</label><input id="c-notes" placeholder="Optional"></div>
+        </div>
+        <div class="drawer-actions">
+          <button class="btn-primary" onclick="addCorporate()">Save corporate</button>
+          <button class="btn-ghost" onclick="toggleDrawer('corp')">Cancel</button>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Name</th><th>Contact</th><th>Phone</th><th>Email</th><th>Terms</th><th>Added</th><th></th></tr></thead>
+        <tbody id="corp-body"></tbody>
+      </table>
+    </div>
+
+    <div class="panel" id="panel-bookings">
+      <div class="toolbar">
+        <span class="count" id="booking-count">0 bookings</span>
+        <button class="add-btn" onclick="toggleDrawer('booking')"><span class="plus">+</span>Add booking</button>
+      </div>
+      <div class="drawer" id="drawer-booking">
+        <h3>New booking</h3>
+        <div class="grid-form">
+          <div class="field"><label>Bill number</label><input id="b-bill" placeholder="10126555"></div>
+          <div class="field"><label>Corporate name</label><select id="b-corp"></select></div>
+          <div class="field"><label>Check-in date</label><input id="b-checkin" type="date"></div>
+          <div class="field"><label>Checkout date</label><input id="b-checkout" type="date"></div>
+          <div class="field"><label>Sales person</label><input id="b-salesperson" placeholder="e.g. Rajiv"></div>
+          <div class="field wide"><label>Guest name</label><input id="b-guest" placeholder="MR. JOHN DOE"></div>
+          <div class="field"><label>Trip ID</label><input id="b-trip" placeholder="2900123 (optional)"></div>
+          <div class="field"><label>Number of adult</label><input id="b-adult" type="number" min="0" value="0"></div>
+          <div class="field"><label>Number of child</label><input id="b-child" type="number" min="0" value="0"></div>
+          <div class="field wide"><label>Tour / attraction</label><input id="b-tour" placeholder="Optional"></div>
+          <div class="field"><label>Invoice amount</label><input id="b-amount" type="number" step="0.01" placeholder="1500"></div>
+          <div class="field">
+            <label>Currency</label>
+            <select id="b-currency">
+              <option value="AED">AED</option>
+              <option value="USD">USD</option>
+              <option value="SGD">SGD</option>
+              <option value="THB">THB</option>
+              <option value="INR">INR</option>
+            </select>
+          </div>
+          <div class="field wide"><label>Notes</label><input id="b-notes" placeholder="Optional"></div>
+        </div>
+        <p class="hint" id="booking-preview"></p>
+        <div class="drawer-actions">
+          <button class="btn-primary" onclick="addBooking()">Save booking</button>
+          <button class="btn-ghost" onclick="toggleDrawer('booking')">Cancel</button>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Bill no.</th><th>Corporate</th><th>Check-in</th><th>Checkout</th><th>Guest</th><th class="num">Pax</th><th>Sales person</th><th class="num">Invoice amount</th><th></th></tr></thead>
+        <tbody id="booking-body"></tbody>
+      </table>
+    </div>
+
+    <div class="panel" id="panel-payments">
+      <div class="toolbar">
+        <span class="count" id="payment-count">0 payments</span>
+        <button class="add-btn" onclick="toggleDrawer('payment')"><span class="plus">+</span>Add payment</button>
+      </div>
+      <div class="drawer" id="drawer-payment">
+        <h3>New payment received</h3>
+        <div class="grid-form">
+          <div class="field"><label>Payment date</label><input id="p-date" type="date"></div>
+          <div class="field"><label>Corporate</label><select id="p-corp"></select></div>
+          <div class="field"><label>Bill no. (optional)</label><input id="p-billref" placeholder="e.g. 10126555"></div>
+          <div class="field"><label>Amount received</label><input id="p-amount" type="number" step="0.01" placeholder="1500"></div>
+          <div class="field">
+            <label>Currency</label>
+            <select id="p-currency">
+              <option value="AED">AED</option>
+              <option value="USD">USD</option>
+              <option value="SGD">SGD</option>
+              <option value="THB">THB</option>
+              <option value="INR">INR</option>
+            </select>
+          </div>
+          <div class="field wide"><label>Reference / mode</label><input id="p-ref" placeholder="Bank transfer – HDFC"></div>
+          <div class="field wide"><label>Notes</label><input id="p-notes" placeholder="Optional"></div>
+        </div>
+        <p class="hint" id="payment-preview"></p>
+        <div class="drawer-actions">
+          <button class="btn-primary" onclick="addPayment()">Save payment</button>
+          <button class="btn-ghost" onclick="toggleDrawer('payment')">Cancel</button>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Date</th><th>Corporate</th><th>Bill ref.</th><th>Reference</th><th class="num">Amount</th><th></th></tr></thead>
+        <tbody id="payment-body"></tbody>
+      </table>
+    </div>
+
+    <div class="panel" id="panel-summary">
+      <div class="toolbar">
+        <span class="count">Filter by corporate</span>
+        <div class="rate-tools">
+          <select class="corp-pick" id="summary-corp-filter" onchange="renderSummary()"></select>
+        </div>
+      </div>
+      <div class="summary-cards" id="summary-cards"></div>
+      <table>
+        <thead><tr><th>Corporate</th><th class="num">Billed</th><th class="num">Received</th><th class="num">Outstanding</th><th>Terms</th><th>Status</th></tr></thead>
+        <tbody id="summary-body"></tbody>
+      </table>
+      <div id="summary-bills-wrap" style="display:none; margin-top:26px;">
+        <h2 style="font-family:var(--font-display); font-size:17px; font-weight:600; margin:0 0 4px; color:var(--ink);">Bills for <span id="summary-bills-corp"></span></h2>
+        <p class="hint">Outstanding here is matched against payments tagged with the same bill number. A payment not tagged to a specific bill still reduces the corporate's overall outstanding shown above, but won't appear against a bill row here.</p>
+        <div class="rate-table-wrap">
+          <table>
+            <thead><tr><th>Bill no.</th><th>Check-in</th><th>Checkout</th><th>Guest</th><th>Sales person</th><th class="num">Invoice amount</th><th class="num">Paid (matched)</th><th class="num">Outstanding</th><th>Status</th></tr></thead>
+            <tbody id="summary-bills-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px; padding:16px 18px; background:#f5f1e6; border:1px solid var(--paper-line); border-radius:10px;">
+      <h3 style="font-family:var(--font-display); font-size:15px; font-weight:600; margin:0 0 4px; color:var(--ink);">Google Drive backup</h3>
+      <p class="hint" style="margin-bottom:12px;">Needs a one-time Google Cloud setup and a real web address for this page (not a double-clicked local file) — see the setup steps below. Paste your Client ID here once it's ready.</p>
+      <div class="grid-form" style="margin-bottom:12px;">
+        <div class="field wide"><label>Google OAuth Client ID</label><input id="gdrive-client-id" placeholder="xxxxxxxxxxxx.apps.googleusercontent.com"></div>
+      </div>
+      <div class="drawer-actions" style="margin-top:0; flex-wrap:wrap;">
+        <button class="btn-primary" onclick="connectGoogleDrive()">Connect Google Drive</button>
+        <button class="btn-ghost" onclick="backupToDrive()">Backup now</button>
+        <button class="btn-ghost" onclick="restoreFromDrive()">Restore from Drive</button>
+        <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--slate); cursor:pointer;">
+          <input type="checkbox" id="gdrive-auto" onchange="localStorage.setItem('fj_gdrive_auto', this.checked ? '1' : '0')">
+          Auto-backup after every change
+        </label>
+      </div>
+      <p class="hint" id="gdrive-status"></p>
+    </div>
+
+    <div style="margin-top:20px; display:flex; justify-content:flex-end; align-items:center; gap:18px; flex-wrap:wrap;">
+      <span class="hint" id="backup-status"></span>
+      <button class="reset-link" onclick="exportBackup()">Export backup (JSON)</button>
+      <button class="reset-link" onclick="document.getElementById('backup-import-file').click()">Import backup</button>
+      <input type="file" id="backup-import-file" accept="application/json,.json" style="display:none" onchange="importBackup(event)">
+      <button class="reset-link" onclick="resetAll()">Clear all data</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let corporates = [];
+let bookings = [];
+let payments = [];
+const CURRENCIES = ['AED','USD','SGD','THB','INR'];
+
+const titles = {
+  corporates: ["Corporate master", "Every corporate client, on record."],
+  bookings: ["Booking details", "Every booking raised against a corporate account."],
+  payments: ["Payments received", "Every payment received against a corporate account."],
+  summary: ["Ledger summary", "Billed, received and outstanding — per corporate, per currency."]
+};
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function money(n){ return (Math.round((n + Number.EPSILON) * 100) / 100).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function esc(s){ const d=document.createElement('div'); d.textContent = s==null?'':s; return d.innerHTML; }
+
+async function loadAll(){
+  const save = document.getElementById('save-state');
+  save.textContent = 'loading…';
+  try{
+    const keys = ['fj_corporates','fj_bookings','fj_payments'];
+    const raw = keys.map(k => localStorage.getItem(k));
+    corporates = raw[0] ? JSON.parse(raw[0]) : [];
+    bookings = raw[1] ? JSON.parse(raw[1]) : [];
+    payments = raw[2] ? JSON.parse(raw[2]) : [];
+    save.textContent = 'saved in this browser';
+  }catch(e){
+    save.textContent = 'storage unavailable — using session only';
+  }
+  renderAll();
+}
+
+async function persist(key, data){
+  try{
+    localStorage.setItem(key, JSON.stringify(data));
+    document.getElementById('save-state').textContent = 'saved in this browser';
+  }catch(e){
+    document.getElementById('save-state').textContent = 'could not save — session only';
+  }
+  scheduleAutoBackup();
+}
+
+// ---------- Google Drive backup ----------
+const DRIVE_BACKUP_FILENAME = 'corporate-ledger-backup.json';
+let gisTokenClient = null;
+let driveAccessToken = null;
+let autoBackupTimer = null;
+
+function backupPayload(){
+  return {
+    app: 'Corporate Ledger Manager',
+    exportedAt: new Date().toISOString(),
+    version: 2,
+    data: { corporates, bookings, payments }
+  };
+}
+
+function initGoogleAuth(){
+  const clientId = localStorage.getItem('fj_gdrive_client_id');
+  if(!clientId || typeof google === 'undefined' || !google.accounts) return;
+  gisTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: clientId,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    callback: (resp) => {
+      const status = document.getElementById('gdrive-status');
+      if(resp && resp.access_token){
+        driveAccessToken = resp.access_token;
+        status.textContent = 'Connected to Google Drive.';
+      } else {
+        status.textContent = 'Could not connect to Google Drive — please try again.';
+      }
+    }
+  });
+}
+
+function connectGoogleDrive(){
+  const status = document.getElementById('gdrive-status');
+  const clientId = document.getElementById('gdrive-client-id').value.trim();
+  if(!clientId){ alert('Paste your Google OAuth Client ID first.'); return; }
+  localStorage.setItem('fj_gdrive_client_id', clientId);
+  if(typeof google === 'undefined' || !google.accounts){
+    status.textContent = 'Google sign-in script has not loaded yet — wait a moment and try again.';
+    return;
+  }
+  initGoogleAuth();
+  if(gisTokenClient) gisTokenClient.requestAccessToken();
+}
+
+async function driveApiFetch(url, options){
+  const res = await fetch(url, {
+    ...options,
+    headers: { ...(options && options.headers), Authorization: `Bearer ${driveAccessToken}` }
+  });
+  if(res.status === 401){
+    driveAccessToken = null;
+    throw new Error('Drive session expired — click Connect Google Drive again.');
+  }
+  if(!res.ok) throw new Error('Drive API error (' + res.status + ')');
+  return res;
+}
+
+async function findDriveBackupFileId(){
+  const q = encodeURIComponent(`name='${DRIVE_BACKUP_FILENAME}' and trashed=false`);
+  const res = await driveApiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,modifiedTime)`, {});
+  const data = await res.json();
+  return (data.files && data.files[0]) ? data.files[0].id : null;
+}
+
+async function backupToDrive(){
+  const status = document.getElementById('gdrive-status');
+  if(!driveAccessToken){ status.textContent = 'Connect Google Drive first.'; return; }
+  status.textContent = 'Backing up to Google Drive…';
+  try{
+    const fileContent = JSON.stringify(backupPayload(), null, 2);
+    const fileId = await findDriveBackupFileId();
+    const boundary = 'fjbackupboundary';
+    const metadata = fileId ? {} : { name: DRIVE_BACKUP_FILENAME, mimeType: 'application/json' };
+    const multipartBody =
+      `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n` +
+      `--${boundary}\r\nContent-Type: application/json\r\n\r\n${fileContent}\r\n--${boundary}--`;
+    const url = fileId
+      ? `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`
+      : `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`;
+    await driveApiFetch(url, {
+      method: fileId ? 'PATCH' : 'POST',
+      headers: { 'Content-Type': `multipart/related; boundary=${boundary}` },
+      body: multipartBody
+    });
+    status.textContent = `Backed up to Google Drive at ${new Date().toLocaleString()}.`;
+  }catch(err){
+    status.textContent = err.message || 'Backup failed — try reconnecting Google Drive.';
+  }
+}
+
+async function restoreFromDrive(){
+  const status = document.getElementById('gdrive-status');
+  if(!driveAccessToken){ status.textContent = 'Connect Google Drive first.'; return; }
+  status.textContent = 'Checking Google Drive…';
+  try{
+    const fileId = await findDriveBackupFileId();
+    if(!fileId){ status.textContent = 'No backup found in Drive yet — click "Backup now" first.'; return; }
+    const res = await driveApiFetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {});
+    const parsed = await res.json();
+    const data = parsed && parsed.data ? parsed.data : parsed;
+    const incomingCorp = Array.isArray(data.corporates) ? data.corporates.length : 0;
+    const incomingBookings = Array.isArray(data.bookings) ? data.bookings.length : 0;
+    if(!confirm(`Restore the Drive backup (${incomingCorp} corporate(s), ${incomingBookings} booking(s))? This replaces all current data.`)){ status.textContent=''; return; }
+    corporates = Array.isArray(data.corporates) ? data.corporates : [];
+    bookings = Array.isArray(data.bookings) ? data.bookings : [];
+    payments = Array.isArray(data.payments) ? data.payments : [];
+    await Promise.all([
+      persist('fj_corporates', corporates),
+      persist('fj_bookings', bookings),
+      persist('fj_payments', payments)
+    ]);
+    status.textContent = 'Restored from Google Drive.';
+    renderAll();
+  }catch(err){
+    status.textContent = err.message || 'Could not restore — try again.';
+  }
+}
+
+function scheduleAutoBackup(){
+  if(localStorage.getItem('fj_gdrive_auto') !== '1') return;
+  if(!driveAccessToken) return;
+  clearTimeout(autoBackupTimer);
+  autoBackupTimer = setTimeout(backupToDrive, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const savedClientId = localStorage.getItem('fj_gdrive_client_id');
+  const clientIdEl = document.getElementById('gdrive-client-id');
+  if(savedClientId && clientIdEl) clientIdEl.value = savedClientId;
+  const autoEl = document.getElementById('gdrive-auto');
+  if(autoEl) autoEl.checked = localStorage.getItem('fj_gdrive_auto') === '1';
+  if(savedClientId) setTimeout(initGoogleAuth, 600);
+});
+
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.getElementById('page-title').textContent = titles[name][0];
+  document.getElementById('page-sub').textContent = titles[name][1];
+  if(name === 'summary') renderSummary();
+}
+
+function toggleDrawer(name){
+  const el = document.getElementById('drawer-' + name);
+  el.classList.toggle('open');
+}
+
+function corpOptions(selected){
+  if(corporates.length === 0) return '<option value="">Add a corporate first</option>';
+  return corporates.map(c => `<option value="${esc(c.id)}" ${c.id===selected?'selected':''}>${esc(c.name)}</option>`).join('');
+}
+function corpName(id){
+  const c = corporates.find(x => x.id === id);
+  return c ? c.name : '—';
+}
+
+function addCorporate(){
+  const name = document.getElementById('c-name').value.trim();
+  if(!name){ alert('Corporate name is required.'); return; }
+  corporates.push({
+    id: uid(), name,
+    contact: document.getElementById('c-contact').value.trim(),
+    phone: document.getElementById('c-phone').value.trim(),
+    email: document.getElementById('c-email').value.trim(),
+    address: document.getElementById('c-address').value.trim(),
+    trn: document.getElementById('c-trn').value.trim(),
+    terms: document.getElementById('c-terms').value || 0,
+    notes: document.getElementById('c-notes').value.trim(),
+    dateAdded: todayStr()
+  });
+  ['c-name','c-contact','c-phone','c-email','c-address','c-trn','c-terms','c-notes'].forEach(id => document.getElementById(id).value = '');
+  toggleDrawer('corp');
+  persist('fj_corporates', corporates);
+  renderAll();
+}
+function deleteCorporate(id){
+  if(!confirm('Remove this corporate? Its rates, bookings and payments stay on record but will show as unlinked.')) return;
+  corporates = corporates.filter(c => c.id !== id);
+  persist('fj_corporates', corporates);
+  renderAll();
+}
+
+// ---------- Booking details ----------
+function addBooking(){
+  const corpId = document.getElementById('b-corp').value;
+  const bill = document.getElementById('b-bill').value.trim();
+  const amount = parseFloat(document.getElementById('b-amount').value);
+  if(!corpId || !bill || !amount){ alert('Corporate, bill number and invoice amount are required.'); return; }
+  bookings.push({
+    id: uid(),
+    corpId,
+    bill,
+    checkin: document.getElementById('b-checkin').value,
+    checkout: document.getElementById('b-checkout').value,
+    salesperson: document.getElementById('b-salesperson').value.trim(),
+    guest: document.getElementById('b-guest').value.trim(),
+    trip: document.getElementById('b-trip').value.trim(),
+    adult: parseInt(document.getElementById('b-adult').value) || 0,
+    child: parseInt(document.getElementById('b-child').value) || 0,
+    tour: document.getElementById('b-tour').value.trim(),
+    amount,
+    currency: document.getElementById('b-currency').value || 'AED',
+    notes: document.getElementById('b-notes').value.trim(),
+    dateAdded: todayStr()
+  });
+  ['b-bill','b-checkin','b-checkout','b-salesperson','b-guest','b-trip','b-adult','b-child','b-tour','b-amount','b-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('b-adult').value = 0;
+  document.getElementById('b-child').value = 0;
+  document.getElementById('booking-preview').textContent = '';
+  toggleDrawer('booking');
+  persist('fj_bookings', bookings);
+  renderAll();
+}
+function deleteBooking(id){
+  bookings = bookings.filter(b => b.id !== id);
+  persist('fj_bookings', bookings);
+  renderAll();
+}
+
+function updateBookingPreview(){
+  const amount = parseFloat(document.getElementById('b-amount').value);
+  const currency = document.getElementById('b-currency').value || 'AED';
+  const adult = parseInt(document.getElementById('b-adult').value) || 0;
+  const child = parseInt(document.getElementById('b-child').value) || 0;
+  const el = document.getElementById('booking-preview');
+  if(!amount){ el.textContent=''; return; }
+  el.textContent = `Invoice: ${currency} ${money(amount)} for ${adult}A${child?(' + '+child+'C'):''}`;
+  el.className = 'hint';
+}
+['b-amount','b-currency','b-adult','b-child'].forEach(id => {
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', updateBookingPreview);
+    if(el) el.addEventListener('change', updateBookingPreview);
+  });
+});
+
+// ---------- Payments received ----------
+function addPayment(){
+  const corpId = document.getElementById('p-corp').value;
+  const amount = parseFloat(document.getElementById('p-amount').value);
+  if(!corpId || !amount){ alert('Corporate and amount received are required.'); return; }
+  payments.push({
+    id: uid(),
+    date: document.getElementById('p-date').value,
+    corpId,
+    billRef: document.getElementById('p-billref').value.trim(),
+    ref: document.getElementById('p-ref').value.trim(),
+    amount,
+    currency: document.getElementById('p-currency').value || 'AED',
+    notes: document.getElementById('p-notes').value.trim()
+  });
+  ['p-billref','p-ref','p-amount','p-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('payment-preview').textContent = '';
+  toggleDrawer('payment');
+  persist('fj_payments', payments);
+  renderAll();
+}
+function deletePayment(id){
+  payments = payments.filter(p => p.id !== id);
+  persist('fj_payments', payments);
+  renderAll();
+}
+function updatePaymentPreview(){
+  const amount = parseFloat(document.getElementById('p-amount').value);
+  const currency = document.getElementById('p-currency').value || 'AED';
+  const el = document.getElementById('payment-preview');
+  if(!amount){ el.textContent=''; return; }
+  el.textContent = `Received: ${currency} ${money(amount)}`;
+}
+document.addEventListener('DOMContentLoaded', () => {
+  ['p-amount','p-currency'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.addEventListener('input', updatePaymentPreview); el.addEventListener('change', updatePaymentPreview); }
+  });
+});
+
+function renderAll(){
+  document.getElementById('corp-count').textContent = corporates.length + (corporates.length===1 ? ' corporate' : ' corporates');
+  document.getElementById('booking-count').textContent = bookings.length + (bookings.length===1 ? ' booking' : ' bookings');
+  document.getElementById('payment-count').textContent = payments.length + (payments.length===1 ? ' payment' : ' payments');
+
+  document.getElementById('corp-body').innerHTML = corporates.length ? corporates.map(c => `
+    <tr>
+      <td>${esc(c.name)}</td>
+      <td>${esc(c.contact)||'<span class="muted">—</span>'}</td>
+      <td>${esc(c.phone)||'<span class="muted">—</span>'}</td>
+      <td>${esc(c.email)||'<span class="muted">—</span>'}</td>
+      <td class="num">${esc(c.terms)||0}d</td>
+      <td>${esc(c.dateAdded)||'<span class="muted">—</span>'}</td>
+      <td><button class="del-btn" onclick="deleteCorporate('${c.id}')" aria-label="Delete">×</button></td>
+    </tr>`).join('') : `<tr class="empty-row"><td colspan="7">No corporates yet — add your first one above.</td></tr>`;
+
+  document.getElementById('booking-body').innerHTML = bookings.length ? bookings.map(b => `
+    <tr>
+      <td>${esc(b.bill)||'<span class="muted">—</span>'}</td>
+      <td>${esc(corpName(b.corpId))}</td>
+      <td>${esc(b.checkin)||'<span class="muted">—</span>'}</td>
+      <td>${esc(b.checkout)||'<span class="muted">—</span>'}</td>
+      <td>${esc(b.guest)||'<span class="muted">—</span>'}</td>
+      <td class="num">${b.adult}A ${b.child?('+ '+b.child+'C'):''}</td>
+      <td>${esc(b.salesperson)||'<span class="muted">—</span>'}</td>
+      <td class="num">${esc(b.currency||'AED')} ${money(b.amount)}</td>
+      <td><button class="del-btn" onclick="deleteBooking('${b.id}')" aria-label="Delete">×</button></td>
+    </tr>`).join('') : `<tr class="empty-row"><td colspan="9">No bookings yet — add one above.</td></tr>`;
+
+  document.getElementById('payment-body').innerHTML = payments.length ? payments.map(p => `
+    <tr>
+      <td>${esc(p.date)||'<span class="muted">—</span>'}</td>
+      <td>${esc(corpName(p.corpId))}</td>
+      <td>${esc(p.billRef)||'<span class="muted">—</span>'}</td>
+      <td>${esc(p.ref)||'<span class="muted">—</span>'}</td>
+      <td class="num">${esc(p.currency||'AED')} ${money(p.amount)}</td>
+      <td><button class="del-btn" onclick="deletePayment('${p.id}')" aria-label="Delete">×</button></td>
+    </tr>`).join('') : `<tr class="empty-row"><td colspan="6">No payments yet — add one above.</td></tr>`;
+
+  ['b-corp','p-corp'].forEach(id => {
+    const el = document.getElementById(id);
+    const cur = el.value;
+    el.innerHTML = corpOptions(cur);
+  });
+
+  renderSummary();
+}
+
+// ---------- Currency-aware ledger stats ----------
+function currencyStatsFor(corpId){
+  const stats = {};
+  CURRENCIES.forEach(c => stats[c] = { billed: 0, received: 0 });
+  bookings.filter(b => !corpId || b.corpId === corpId).forEach(b => {
+    const cur = b.currency || 'AED';
+    if(!stats[cur]) stats[cur] = { billed: 0, received: 0 };
+    stats[cur].billed += (parseFloat(b.amount) || 0);
+  });
+  payments.filter(p => !corpId || p.corpId === corpId).forEach(p => {
+    const cur = p.currency || 'AED';
+    if(!stats[cur]) stats[cur] = { billed: 0, received: 0 };
+    stats[cur].received += (parseFloat(p.amount) || 0);
+  });
+  return stats;
+}
+
+function renderSummary(){
+  const filterEl = document.getElementById('summary-corp-filter');
+  const curSel = filterEl ? filterEl.value : '';
+  if(filterEl){
+    filterEl.innerHTML = '<option value="">All corporates</option>' + corporates.map(c =>
+      `<option value="${esc(c.id)}" ${c.id===curSel?'selected':''}>${esc(c.name)}</option>`).join('');
+  }
+  const filterId = filterEl ? filterEl.value : '';
+
+  // currency-wise totals for the current scope (all corporates, or the filtered one)
+  const scopeStats = currencyStatsFor(filterId || null);
+  const activeCurrencies = CURRENCIES.filter(c => scopeStats[c] && (scopeStats[c].billed || scopeStats[c].received));
+  document.getElementById('summary-cards').innerHTML = `
+    <div class="scard"><div class="label">Corporates</div><div class="value">${filterId ? 1 : corporates.length}</div></div>
+    ${activeCurrencies.length ? activeCurrencies.map(c => `
+      <div class="scard"><div class="label">${c} billed</div><div class="value">${money(scopeStats[c].billed)}</div></div>
+      <div class="scard"><div class="label">${c} received</div><div class="value">${money(scopeStats[c].received)}</div></div>
+      <div class="scard"><div class="label">${c} outstanding</div><div class="value">${money(scopeStats[c].billed - scopeStats[c].received)}</div></div>
+    `).join('') : '<div class="scard"><div class="label">Activity</div><div class="value">None yet</div></div>'}
+  `;
+
+  const rowsCorps = filterId ? corporates.filter(c => c.id === filterId) : corporates;
+  document.getElementById('summary-body').innerHTML = rowsCorps.length ? rowsCorps.map(c => {
+    const stats = currencyStatsFor(c.id);
+    const cs = CURRENCIES.filter(cur => stats[cur] && (stats[cur].billed || stats[cur].received));
+    const billedStr = cs.length ? cs.map(cur => `${cur} ${money(stats[cur].billed)}`).join('<br>') : '<span class="muted">—</span>';
+    const receivedStr = cs.length ? cs.map(cur => `${cur} ${money(stats[cur].received)}`).join('<br>') : '<span class="muted">—</span>';
+    const outstandingStr = cs.length ? cs.map(cur => `${cur} ${money(stats[cur].billed - stats[cur].received)}`).join('<br>') : '<span class="muted">—</span>';
+    const isSettled = cs.length === 0 || cs.every(cur => (stats[cur].billed - stats[cur].received) <= 0.005);
+    return `<tr>
+      <td>${esc(c.name)}</td>
+      <td class="num">${billedStr}</td>
+      <td class="num">${receivedStr}</td>
+      <td class="num">${outstandingStr}</td>
+      <td>${esc(c.terms)||0}d</td>
+      <td><span class="stamp ${isSettled ? 'settled' : 'outstanding'}">${isSettled ? 'Settled' : 'Outstanding'}</span></td>
+    </tr>`;
+  }).join('') : `<tr class="empty-row"><td colspan="6">Add a corporate to see its ledger here.</td></tr>`;
+
+  // per-bill detail — only shown once a single corporate is selected
+  const billsWrap = document.getElementById('summary-bills-wrap');
+  if(filterId){
+    const corp = corporates.find(c => c.id === filterId);
+    billsWrap.style.display = 'block';
+    document.getElementById('summary-bills-corp').textContent = corp ? corp.name : '—';
+    const corpBookings = bookings.filter(b => b.corpId === filterId);
+    document.getElementById('summary-bills-body').innerHTML = corpBookings.length ? corpBookings.map(b => {
+      const cur = b.currency || 'AED';
+      const matchedPaid = payments.filter(p => p.corpId === filterId && (p.currency||'AED') === cur &&
+        p.billRef && p.billRef.trim().toLowerCase() === String(b.bill||'').trim().toLowerCase())
+        .reduce((sum,p) => sum + (parseFloat(p.amount)||0), 0);
+      const outstanding = (parseFloat(b.amount)||0) - matchedPaid;
+      return `<tr>
+        <td>${esc(b.bill)||'<span class="muted">—</span>'}</td>
+        <td>${esc(b.checkin)||'<span class="muted">—</span>'}</td>
+        <td>${esc(b.checkout)||'<span class="muted">—</span>'}</td>
+        <td>${esc(b.guest)||'<span class="muted">—</span>'}</td>
+        <td>${esc(b.salesperson)||'<span class="muted">—</span>'}</td>
+        <td class="num">${cur} ${money(b.amount)}</td>
+        <td class="num">${matchedPaid ? cur+' '+money(matchedPaid) : '<span class="muted">—</span>'}</td>
+        <td class="num">${cur} ${money(outstanding)}</td>
+        <td><span class="stamp ${outstanding<=0.005 ? 'settled' : 'outstanding'}">${outstanding<=0.005 ? 'Settled' : 'Outstanding'}</span></td>
+      </tr>`;
+    }).join('') : `<tr class="empty-row"><td colspan="9">No bills for this corporate yet.</td></tr>`;
+  } else {
+    billsWrap.style.display = 'none';
+  }
+}
+
+async function resetAll(){
+  if(!confirm('This clears every corporate, booking and payment on this device. Continue?')) return;
+  corporates = []; bookings = []; payments = [];
+  await Promise.all([
+    persist('fj_corporates', corporates),
+    persist('fj_bookings', bookings),
+    persist('fj_payments', payments)
+  ]);
+  renderAll();
+}
+
+// ---------- Backup: export / import ----------
+function exportBackup(){
+  const payload = {
+    app: 'Corporate Ledger Manager',
+    exportedAt: new Date().toISOString(),
+    version: 2,
+    data: { corporates, bookings, payments }
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = todayStr();
+  a.href = url;
+  a.download = `corporate-ledger-backup-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  const status = document.getElementById('backup-status');
+  status.textContent = 'Backup exported.';
+  setTimeout(() => { if(status.textContent === 'Backup exported.') status.textContent = ''; }, 4000);
+}
+
+async function importBackup(evt){
+  const file = evt.target.files && evt.target.files[0];
+  if(!file) return;
+  const status = document.getElementById('backup-status');
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try{
+      const parsed = JSON.parse(e.target.result);
+      const data = parsed && parsed.data ? parsed.data : parsed; // tolerate a raw data object too
+      if(!data || typeof data !== 'object'){ throw new Error('bad shape'); }
+      const incomingCorp = Array.isArray(data.corporates) ? data.corporates.length : 0;
+      const incomingBookings = Array.isArray(data.bookings) ? data.bookings.length : 0;
+      if(!confirm(`This will replace all current data with the backup (${incomingCorp} corporate(s), ${incomingBookings} booking(s)). Continue?`)) {
+        evt.target.value = '';
+        return;
+      }
+      corporates = Array.isArray(data.corporates) ? data.corporates : [];
+      bookings = Array.isArray(data.bookings) ? data.bookings : [];
+      payments = Array.isArray(data.payments) ? data.payments : [];
+      await Promise.all([
+        persist('fj_corporates', corporates),
+        persist('fj_bookings', bookings),
+        persist('fj_payments', payments)
+      ]);
+      status.textContent = 'Backup restored.';
+      renderAll();
+    }catch(err){
+      status.textContent = 'Could not read that backup file — please check it is a valid export from this app.';
+    }finally{
+      evt.target.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
+
+loadAll();
+document.getElementById('b-amount') && document.getElementById('b-amount').addEventListener('input', updateBookingPreview);
+document.getElementById('b-currency') && document.getElementById('b-currency').addEventListener('change', updateBookingPreview);
+document.getElementById('b-adult') && document.getElementById('b-adult').addEventListener('input', updateBookingPreview);
+document.getElementById('b-child') && document.getElementById('b-child').addEventListener('input', updateBookingPreview);
+document.getElementById('p-amount') && document.getElementById('p-amount').addEventListener('input', updatePaymentPreview);
+document.getElementById('p-currency') && document.getElementById('p-currency').addEventListener('change', updatePaymentPreview);
+</script>
+</body>
+</html>
