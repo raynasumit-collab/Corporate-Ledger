@@ -106,6 +106,21 @@
         }
       ],
       "createdAt": "2026-09-23T07:15:38.342Z"
+    },
+    {
+      "id": "pay_mudrsxd2725xkx",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "date": "2026-05-28",
+      "currency": "USD",
+      "totalAmount": 8996,
+      "notes": "TRN-052826476-056\t-\t28-May-2026\tTrade Ref no. IR26052700012684, Ref #- = USD 8,996.00/-",
+      "allocations": [
+        {
+          "bookingId": "bkg_mudrn3taq3eszu",
+          "amount": 8996
+        }
+      ],
+      "createdAt": "2026-09-23T07:17:19.718Z"
     }
   ],
   "settings": {
@@ -121,7 +136,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-23T07:12:49.348Z"
+      "lastBackupAt": "2026-09-23T07:15:39.527Z"
     }
   }
 }
