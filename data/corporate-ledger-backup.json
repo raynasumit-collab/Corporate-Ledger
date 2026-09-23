@@ -326,6 +326,21 @@
         }
       ],
       "createdAt": "2026-09-23T10:11:55.592Z"
+    },
+    {
+      "id": "pay_mudy2qgoxkarik",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "date": "2026-09-16",
+      "currency": "USD",
+      "totalAmount": 15000,
+      "notes": "Trade Fice Deposit Trade Ref no IR26091600008222 On 16-Sep-2026        0.00        494,809.60  THB  USD 15,000.00",
+      "allocations": [
+        {
+          "bookingId": "bkg_mudxy0xkv4wtdv",
+          "amount": 15000
+        }
+      ],
+      "createdAt": "2026-09-23T10:12:55.032Z"
     }
   ],
   "settings": {
@@ -341,7 +356,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-23T10:09:16.764Z"
+      "lastBackupAt": "2026-09-23T10:11:57.084Z"
     }
   }
 }
