@@ -371,6 +371,21 @@
         }
       ],
       "createdAt": "2026-09-23T10:15:56.032Z"
+    },
+    {
+      "id": "pay_mudy7cf4zzc0gt",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "date": "2026-09-22",
+      "currency": "USD",
+      "totalAmount": 30000,
+      "notes": "Trade Fice Deposit Trade Ref no IR26092200022494 On 22-Sep-2026  0.00        989,812.30  USD 30,000.00",
+      "allocations": [
+        {
+          "bookingId": "bkg_mudxy0xkv4wtdv",
+          "amount": 30000
+        }
+      ],
+      "createdAt": "2026-09-23T10:16:30.112Z"
     }
   ],
   "settings": {
@@ -386,7 +401,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-23T10:12:56.406Z"
+      "lastBackupAt": "2026-09-23T10:15:57.373Z"
     }
   }
 }
