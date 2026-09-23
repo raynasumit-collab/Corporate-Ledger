@@ -1,6 +1,31 @@
 {
-  "corporates": [],
-  "bookings": [],
+  "corporates": [
+    {
+      "id": "corp_mudqmin9gbb03d",
+      "name": "Geanis Holidays Pvt. Ltd.",
+      "code": "Geanis",
+      "contact": "Mr Pradeep",
+      "email": "accounts@geanisworld.com",
+      "phone": "+91 99718 89185",
+      "notes": ""
+    }
+  ],
+  "bookings": [
+    {
+      "id": "bkg_mudqwa7hf7ya55",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "billNumber": "1810251541",
+      "description": "Mr Harpreet Singh Marwaha",
+      "checkin": "2025-10-21",
+      "checkout": "2025-10-27",
+      "pax": "4",
+      "currency": "USD",
+      "invoiceAmount": 1656,
+      "salesPerson": "Ashutosh",
+      "invoiceDate": "2025-10-20",
+      "createdAt": "2026-09-23T06:51:56.718Z"
+    }
+  ],
   "payments": [],
   "settings": {
     "company": {
@@ -15,7 +40,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-23T06:41:55.096Z"
+      "lastBackupAt": "2026-09-23T06:43:45.013Z"
     }
   }
 }
