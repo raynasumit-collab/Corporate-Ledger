@@ -341,6 +341,36 @@
         }
       ],
       "createdAt": "2026-09-23T10:12:55.032Z"
+    },
+    {
+      "id": "pay_mudy3qk8qe6tf0",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "date": "2026-09-16",
+      "currency": "USD",
+      "totalAmount": 30000,
+      "notes": "Trade Fice Deposit Trade Ref no IR26091600006759 On 16-Sep-2026        0.00                991,609.60 THB USD 30,000.00",
+      "allocations": [
+        {
+          "bookingId": "bkg_mudxy0xkv4wtdv",
+          "amount": 30000
+        }
+      ],
+      "createdAt": "2026-09-23T10:13:41.816Z"
+    },
+    {
+      "id": "pay_mudy6m4g9zybw7",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "date": "2026-09-22",
+      "currency": "USD",
+      "totalAmount": 35000,
+      "notes": "Trade Fice Deposit Trade Ref no IR26092200005868 On 22-Sep-2026             0.00        1,156,860.05  USD 35,000.00",
+      "allocations": [
+        {
+          "bookingId": "bkg_mudxy0xkv4wtdv",
+          "amount": 35000
+        }
+      ],
+      "createdAt": "2026-09-23T10:15:56.032Z"
     }
   ],
   "settings": {
@@ -356,7 +386,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-23T10:11:57.084Z"
+      "lastBackupAt": "2026-09-23T10:12:56.406Z"
     }
   }
 }
