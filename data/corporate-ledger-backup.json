@@ -94,6 +94,20 @@
       "salesPerson": "Ashutosh",
       "invoiceDate": "2026-09-22",
       "createdAt": "2026-09-23T07:59:20.353Z"
+    },
+    {
+      "id": "bkg_mudti4o9b1c3lq",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "billNumber": "050826267",
+      "description": "Mr Ankit Dang",
+      "checkin": "2026-08-06",
+      "checkout": "2026-08-17",
+      "pax": "2",
+      "currency": "THB",
+      "invoiceAmount": 37400,
+      "salesPerson": "Akash",
+      "invoiceDate": "2026-08-19",
+      "createdAt": "2026-09-23T08:04:55.209Z"
     }
   ],
   "payments": [
@@ -269,7 +283,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-23T07:53:08.486Z"
+      "lastBackupAt": "2026-09-23T07:59:22.083Z"
     }
   }
 }
