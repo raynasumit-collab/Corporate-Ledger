@@ -1,0 +1,31 @@
+{
+  "corporates": [
+    {
+      "id": "corp_muct94y52sni31",
+      "name": "Geanis Holidays Pvt. Ltd.",
+      "code": "Geanis",
+      "contact": "Mr Pradeep",
+      "email": "accounts@geanisworld.com",
+      "phone": "+91 99718 89185",
+      "notes": ""
+    }
+  ],
+  "bookings": [],
+  "payments": [],
+  "settings": {
+    "company": {
+      "name": "Rayna Tourism LLC",
+      "address": "",
+      "email": "",
+      "phone": ""
+    },
+    "github": {
+      "owner": "raynasumit-collab",
+      "repo": "Corporate-Ledger",
+      "branch": "main",
+      "path": "data/corporate-ledger-backup.json",
+      "autoBackup": true,
+      "lastBackupAt": ""
+    }
+  }
+}
