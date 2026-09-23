@@ -1,15 +1,5 @@
 {
-  "corporates": [
-    {
-      "id": "corp_muct94y52sni31",
-      "name": "Geanis Holidays Pvt. Ltd.",
-      "code": "Geanis",
-      "contact": "Mr Pradeep",
-      "email": "accounts@geanisworld.com",
-      "phone": "+91 99718 89185",
-      "notes": ""
-    }
-  ],
+  "corporates": [],
   "bookings": [],
   "payments": [],
   "settings": {
@@ -25,7 +15,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": ""
+      "lastBackupAt": "2026-09-23T06:41:55.096Z"
     }
   }
 }
