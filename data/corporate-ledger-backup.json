@@ -225,6 +225,21 @@
         }
       ],
       "createdAt": "2026-09-23T07:48:21.425Z"
+    },
+    {
+      "id": "pay_mudszahsk4cfx1",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "date": "2026-09-09",
+      "currency": "USD",
+      "totalAmount": 16000,
+      "notes": "Amount Details  : S06625210A4D01           B/O GEANIS HOLIDAYS PRIVATE LIMITED 262521977259                 0.00                58,557.24 AED",
+      "allocations": [
+        {
+          "bookingId": "bkg_mudso2ps35lg4o",
+          "amount": 16000
+        }
+      ],
+      "createdAt": "2026-09-23T07:50:16.288Z"
     }
   ],
   "settings": {
@@ -240,7 +255,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-23T07:45:35.474Z"
+      "lastBackupAt": "2026-09-23T07:48:22.797Z"
     }
   }
 }
