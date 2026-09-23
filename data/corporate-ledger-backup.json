@@ -40,7 +40,27 @@
       "createdAt": "2026-09-23T06:53:33.693Z"
     }
   ],
-  "payments": [],
+  "payments": [
+    {
+      "id": "pay_mudr43djz044sd",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "date": "2026-02-18",
+      "currency": "USD",
+      "totalAmount": 4404,
+      "notes": "18-Feb-2026           2026021700637011    . B/O GEANIS HOLIDAYS PRIVATE LIMITED 260480490309            UNKN180226740-8226 USD 4404",
+      "allocations": [
+        {
+          "bookingId": "bkg_mudqwa7hf7ya55",
+          "amount": 1656
+        },
+        {
+          "bookingId": "bkg_mudqyd19skp81d",
+          "amount": 2748
+        }
+      ],
+      "createdAt": "2026-09-23T06:58:01.111Z"
+    }
+  ],
   "settings": {
     "company": {
       "name": "Rayna Tourism LLC",
@@ -54,7 +74,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-23T06:51:57.934Z"
+      "lastBackupAt": "2026-09-23T06:53:34.821Z"
     }
   }
 }
