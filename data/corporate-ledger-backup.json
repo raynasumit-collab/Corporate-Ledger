@@ -24,6 +24,20 @@
       "salesPerson": "Ashutosh",
       "invoiceDate": "2025-10-20",
       "createdAt": "2026-09-23T06:51:56.718Z"
+    },
+    {
+      "id": "bkg_mudqyd19skp81d",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "billNumber": "1701261985",
+      "description": "Mr Santosh Kumar",
+      "checkin": "2026-02-11",
+      "checkout": "2027-02-16",
+      "pax": "4",
+      "currency": "USD",
+      "invoiceAmount": 2748,
+      "salesPerson": "Ashutosh",
+      "invoiceDate": "2027-02-12",
+      "createdAt": "2026-09-23T06:53:33.693Z"
     }
   ],
   "payments": [],
@@ -40,7 +54,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-23T06:43:45.013Z"
+      "lastBackupAt": "2026-09-23T06:51:57.934Z"
     }
   }
 }
