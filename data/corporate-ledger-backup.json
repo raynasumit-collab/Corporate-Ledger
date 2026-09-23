@@ -136,6 +136,21 @@
         }
       ],
       "createdAt": "2026-09-23T07:19:22.230Z"
+    },
+    {
+      "id": "pay_mudsdjnjjsuxyl",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "date": "2026-07-07",
+      "currency": "USD",
+      "totalAmount": 6101,
+      "notes": "07-Jul-2026         PHUB683728212               B/O_/009/004 S_NRAK_683728212_Technic        UNKN070726540-2554                22,270.00  AED",
+      "allocations": [
+        {
+          "bookingId": "bkg_mudrn3taq3eszu",
+          "amount": 6101
+        }
+      ],
+      "createdAt": "2026-09-23T07:33:21.727Z"
     }
   ],
   "settings": {
@@ -151,7 +166,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-23T07:17:21.123Z"
+      "lastBackupAt": "2026-09-23T07:19:23.389Z"
     }
   }
 }
