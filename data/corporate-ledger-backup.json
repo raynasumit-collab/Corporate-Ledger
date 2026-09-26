@@ -8,6 +8,15 @@
       "email": "accounts@geanisworld.com",
       "phone": "+91 99718 89185",
       "notes": ""
+    },
+    {
+      "id": "corp_mui3rn5nhs8i74",
+      "name": "Yash Pawale",
+      "code": "Yash Pawale",
+      "contact": "Yash Pawale",
+      "email": "",
+      "phone": "+91 99212 56168",
+      "notes": ""
     }
   ],
   "bookings": [
@@ -445,7 +454,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-24T07:36:29.979Z"
+      "lastBackupAt": "2026-09-26T06:11:29.659Z"
     }
   }
 }
