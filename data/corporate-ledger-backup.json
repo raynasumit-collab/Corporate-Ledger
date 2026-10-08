@@ -17,6 +17,15 @@
       "email": "",
       "phone": "+91 99212 56168",
       "notes": ""
+    },
+    {
+      "id": "corp_muzj89q92qn5jb",
+      "name": "Gate Way Mice",
+      "code": "Gate Way Mice",
+      "contact": "Mr Varun Bhasin",
+      "email": "varun.bhasin@gatewaymice.com",
+      "phone": "+91 90157 98116",
+      "notes": ""
     }
   ],
   "bookings": [
@@ -468,7 +477,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-26T08:03:21.342Z"
+      "lastBackupAt": "2026-09-26T08:05:39.247Z"
     }
   }
 }
