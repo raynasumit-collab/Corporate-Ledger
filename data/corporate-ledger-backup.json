@@ -462,6 +462,25 @@
         }
       ],
       "createdAt": "2026-09-24T07:33:21.638Z"
+    },
+    {
+      "id": "pay_mv26regazpvhyw",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "date": "2026-10-10",
+      "currency": "USD",
+      "totalAmount": 13508,
+      "notes": "09-Oct-2026        S0662822E67F01               B/O GEANIS HOLIDAYS PRIVATE LIMITED 262822228170  UNKN091026697-3549       49,450.78 AED / USD 13,508",
+      "allocations": [
+        {
+          "bookingId": "bkg_mudtayapid6qfj",
+          "amount": 764
+        },
+        {
+          "bookingId": "bkg_mudso2ps35lg4o",
+          "amount": 12744
+        }
+      ],
+      "createdAt": "2026-10-10T09:22:31.018Z"
     }
   ],
   "settings": {
@@ -477,7 +496,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-09-26T08:05:39.247Z"
+      "lastBackupAt": "2026-10-08T12:48:17.408Z"
     }
   }
 }
