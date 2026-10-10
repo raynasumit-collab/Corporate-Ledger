@@ -481,6 +481,21 @@
         }
       ],
       "createdAt": "2026-10-10T09:22:31.018Z"
+    },
+    {
+      "id": "pay_mv274vcp02t8et",
+      "corporateId": "corp_mudqmin9gbb03d",
+      "date": "2026-09-28",
+      "currency": "THB",
+      "totalAmount": 497835,
+      "notes": "Trade Fice Deposit Trade Ref no IR26092800003685 On 28-Sep-2026        0.00        USD 15000  THB 497,834.50  AED 54,767.27",
+      "allocations": [
+        {
+          "bookingId": "bkg_muhzrrxh304hsk",
+          "amount": 497835
+        }
+      ],
+      "createdAt": "2026-10-10T09:32:59.449Z"
     }
   ],
   "settings": {
@@ -496,7 +511,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-10-10T09:23:52.792Z"
+      "lastBackupAt": "2026-10-10T09:31:38.280Z"
     }
   }
 }
