@@ -94,7 +94,7 @@
       "checkout": "2026-09-06",
       "pax": "150",
       "currency": "USD",
-      "invoiceAmount": 80627,
+      "invoiceAmount": 80744,
       "salesPerson": "Sumit Panwar",
       "invoiceDate": "2026-09-22",
       "createdAt": "2026-09-23T07:41:32.992Z"
@@ -496,7 +496,7 @@
       "branch": "main",
       "path": "data/corporate-ledger-backup.json",
       "autoBackup": true,
-      "lastBackupAt": "2026-10-08T12:48:17.408Z"
+      "lastBackupAt": "2026-10-10T09:22:33.142Z"
     }
   }
 }
